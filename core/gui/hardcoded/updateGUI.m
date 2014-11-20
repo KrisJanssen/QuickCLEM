@@ -4,7 +4,10 @@ function updateGUI( hObject )
 
 [ ~, handles ] = getmainwindowhandles();
 
+hold on
 imshow( imadjust( handles.streamdata{handles.currentframe,1} ), 'Parent', handles.axesFrame );
+
+
 
 framecount = size(handles.streamdata, 1);
 
@@ -13,6 +16,8 @@ setuicontrolstring(handles.localizerCtrls, 'Currframe', handles.currentframe)
 
 
 try
+    axes(handles.axesFrame);
+    
     spotcount = size(handles.localizedXY,1);
     
     setuicontrolstring(handles.localizerCtrls, 'Noflocalizations', spotcount)
@@ -20,16 +25,19 @@ try
     localizedframe = find(handles.localizedXY(:,1) == handles.currentframe);
     
     if localizedframe
-
-        hold on
         
         X = handles.localizedXY(localizedframe, 2);
         Y = handles.localizedXY(localizedframe, 3);
         
         plot(X, Y, '.r');
         
-        hold off
     end
+end
+
+hold off
+
+try
+    imshow( imadjust( handles.imageSEM ), 'Parent', handles.axesSEM );
 end
 
 setmainwindowhandles( handles );
