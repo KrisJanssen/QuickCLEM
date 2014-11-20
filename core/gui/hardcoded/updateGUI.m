@@ -17,18 +17,19 @@ try
     
     setuicontrolstring(handles.localizerCtrls, 'Noflocalizations', spotcount)
     
-    if framecount ~= size(handles.localizedXY,1)
+    localizedframe = find(handles.localizedXY(:,1) == handles.currentframe);
+    
+    if localizedframe
+
+        hold on
         
+        X = handles.localizedXY(localizedframe, 2);
+        Y = handles.localizedXY(localizedframe, 3);
+        
+        plot(X, Y, '.r');
+        
+        hold off
     end
-    
-    hold on
-    
-    X = handles.localizedXY(handles.currentframe, 1);
-    Y = handles.localizedXY(handles.currentframe, 2);
-    
-    plot(X, Y, '.r');
-    
-    hold off
 end
 
 setmainwindowhandles( handles );

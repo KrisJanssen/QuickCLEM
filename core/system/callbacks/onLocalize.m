@@ -15,7 +15,12 @@ Pfa = str2double(getuicontrolstring(handles.localizerCtrls, 'Pfa'));
 
 localizedPositions = LocalizerMatlab('localize', Psfwidth, 'glrt', Pfa, '2DGauss', filePath);
 
-handles.localizedXY = localizedPositions(:,4:5);
+%Select the needed data
+cols = [ 1 4 5 ];
+temp = localizedPositions(:,cols)
+
+%Compensate for 0 indexing in localizer.
+handles.localizedXY = arrayfun(@(x) (x + 1), temp);
 
 % Update the shared data. Matlab passes by value, not by reference.
 setmainwindowhandles( handles );
