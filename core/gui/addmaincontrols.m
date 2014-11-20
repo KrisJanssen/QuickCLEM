@@ -7,7 +7,6 @@ function addmaincontrols( hfig )
 
 handles = guidata(hfig);
 
-
 % Add principal layout boxes
 hBox = uix.HBox('Parent', hfig, 'BackgroundColor', 'b');
 vBoxLeft = uix.VBox('Parent', hBox, ...
