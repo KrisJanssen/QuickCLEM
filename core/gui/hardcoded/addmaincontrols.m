@@ -101,8 +101,22 @@ disablechildcontrols(localizerPanel);
 handles.localizerCtrls = localizerPanel;
 
 %% Localizer output
-localizerOutPanel = uix.Panel('Parent', vBoxRight, ...
+overlayPanel = uix.Panel('Parent', vBoxRight, ...
     'Padding', 5);
+
+overlayGrid = uix.Grid('Parent', overlayPanel, ...
+    'Spacing', 5);
+
+uicontrol('Parent', overlayGrid, ...
+    'Style', 'pushbutton', ...
+    'String', 'Load SEM', ...
+    'Callback', @onLoadSEM);
+
+uix.Empty( 'Parent', localizerGrid )
+
+set(localizerGrid, 'Widths', [ -1 -0.5 ], 'Heights', [ 25 25 25 25 25 25 ]);
+
+handles.overlayCtrls = overlayPanel;
 
 set( vBoxRight, 'Heights', [ -1 -1 ]);
 

@@ -19,7 +19,7 @@ arrayfun(@(x) delete(x), existingmenus);
 
 FileMenu = uimenu( hfig, 'Label', 'File' );
 uimenu( FileMenu, 'Label', 'Open CL', 'Callback', @onFileOpen );
-uimenu( FileMenu, 'Label', 'Open SEM', 'Callback', @onFileOpen );
+uimenu( FileMenu, 'Label', 'Open SEM', 'Callback', @onSEMOpen );
 uimenu( FileMenu, 'Label', 'Exit', 'Callback', @onExit );
 
 % Store the handles to the new menu
