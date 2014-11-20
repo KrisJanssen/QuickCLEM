@@ -3,7 +3,7 @@ function onLocalize( source , callbackdata )
 %   Detailed explanation goes here
 
 % Get shared data
-handles = getmainwindowhandles();
+[ ~, handles ] = getmainwindowhandles();
 
 filePath = strcat(handles.path, handles.filename);
 

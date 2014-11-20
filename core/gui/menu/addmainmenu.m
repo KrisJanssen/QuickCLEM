@@ -1,16 +1,9 @@
-function addmainmenu( hfig )
+function addmainmenu()
 %ADDMENU Summary of this function goes here
 %   Detailed explanation goes here
 
 % Get the main app window and the handles
-%hfig = getappdata(0, 'mainWindow');
-handles = guidata(hfig);
-% 
-% if exist('handles.filemenu','var') %if it's there, delete it.
-%     delete(mh);
-% end
-
-% Build the menu
+[ hfig, handles ] = getmainwindowhandles();
 
 % Make sure the menus are not already there...
 existingmenus = findall( hfig, 'Type', 'uimenu' );

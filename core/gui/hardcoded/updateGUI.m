@@ -2,7 +2,7 @@ function updateGUI( hObject )
 %UPDATEGUI Summary of this function goes here
 %   Detailed explanation goes here
 
-handles = getmainwindowhandles();
+[ ~, handles ] = getmainwindowhandles();
 
 imshow( imadjust( handles.streamdata{handles.currentframe,1} ), 'Parent', handles.axesFrame );
 

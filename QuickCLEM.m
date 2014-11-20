@@ -149,8 +149,8 @@ if ~ok
     return
 end
 
-addmainmenu( hObject )
-addmaincontrols( hObject );
+addmainmenu()
+addmaincontrols();
 
 %handles = guidata(hObject);
 
