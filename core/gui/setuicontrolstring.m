@@ -1,4 +1,4 @@
-function setuicontrolstring( parent, strval )
+function setuicontrolstring( parent, tag, strval )
 %SETUICONTROLSTRING Summary of this function goes here
 %   Detailed explanation goes here
 

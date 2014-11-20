@@ -32,12 +32,8 @@ else
         stepVal = 1 / (maxVal - 1);
         set(slider,'Min', 1, 'Max', maxVal, 'Sliderstep', [stepVal , stepVal], 'Value', 1);
         
-        
-        
-        enablechildcontrols(handles.localizerCtrls);
-        
-        imshow(imadjust(handles.streamdata{1,1}), 'Parent', handles.axesFrame);
-        
+        handles.currentframe = 1;
+
         guidata( hObject, handles);
         
         % Get rid of the modal
@@ -48,5 +44,7 @@ else
         rethrow(error);
     end
     
+    updateGUI()
+    enablechildcontrols(handles.localizerCtrls)
 end
 

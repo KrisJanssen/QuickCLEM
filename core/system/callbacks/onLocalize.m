@@ -2,8 +2,8 @@ function onLocalize( source , callbackdata )
 %ONLOCALIZE Summary of this function goes here
 %   Detailed explanation goes here
 
-href = getappdata(0,'mainWindow');
-handles = guidata( href );
+% Get shared data
+handles = getmainwindowhandles();
 
 filePath = strcat(handles.path, handles.filename);
 
@@ -13,8 +13,14 @@ filePath = strcat(handles.path, handles.filename);
 Psfwidth = str2double(getuicontrolstring(handles.localizerCtrls, 'Psfwidth'));
 Pfa = str2double(getuicontrolstring(handles.localizerCtrls, 'Pfa'));
 
+localizedPositions = LocalizerMatlab('localize', Psfwidth, 'glrt', Pfa, '2DGauss', filePath);
 
-localizedPositions = LocalizerMatlab('localize', Psfwidth, 'glrt', Pfa, '2DGauss', filePath)
+handles.localizedXY = localizedPositions(:,4:5);
+
+% Update the shared data. Matlab passes by value, not by reference.
+setmainwindowhandles( handles );
+
+updateGUI()
 
 end
 
