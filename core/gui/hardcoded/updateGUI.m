@@ -45,12 +45,13 @@ hold off
 
 try
     
-    %axes(handles.axesCLGrid);
     cla(handles.axesCLGrid);
     
     plot(handles.axesCLGrid, ...
         handles.localizedXY(:, 2), ...
         handles.localizedXY(:, 3), '.r');
+    
+    axis(handles.axesCLGrid, 'square');
     
 catch
     % Do nothing
@@ -64,6 +65,8 @@ try
     plot(handles.axesSEMGrid, ...
         handles.SEMXY(:, 1), ...
         handles.SEMXY(:, 2), '.r');
+    
+    axis(handles.axesSEMGrid, 'square');
     
 catch
     % Do nothing
