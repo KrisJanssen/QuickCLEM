@@ -12,13 +12,15 @@ tabPanel = uix.TabPanel('Parent', hfig, ...
 
 % Add principal layout boxes
 hBoxCL = uix.HBox('Parent', tabPanel);
+hBoxComp = uix.HBox('Parent', tabPanel);
 hBoxSEM = uix.HBox('Parent', tabPanel);
 hBoxResult = uix.HBox('Parent', tabPanel, 'BackgroundColor', 'b');
 
-tabPanel.TabTitles = {'CL', 'SEM', 'Result'};
+tabPanel.TabTitles = {'CL', 'Compare', 'SEM', 'Result'};
 tabPanel.Selection = 1;
 
 handles = addtabCLcontrols(hBoxCL, handles);
+handles = addtabComparecontrols(hBoxComp, handles);
 handles = addtabSEMcontrols(hBoxSEM, handles);
 
 

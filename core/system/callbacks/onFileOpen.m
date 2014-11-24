@@ -18,6 +18,7 @@ else
         % functionality/responsability.
         handles.filename = file;
         handles.path = path;
+       
         
         % Show a modal while we are busy
         h = showbusy;
@@ -33,6 +34,12 @@ else
         set(slider,'Min', 1, 'Max', maxVal, 'Sliderstep', [stepVal , stepVal], 'Value', 1);
         
         handles.currentframe = 1;
+        
+        [~,name,~] = fileparts(file); 
+        
+        filenametxt = strcat(name, '.txt');
+        
+        handles.SEMXY = csvread( strcat(path, filenametxt) );
 
         guidata( hObject, handles);
         
