@@ -7,9 +7,13 @@ function updateGUI( hObject )
 % Clear the CL sport display
 cla(handles.axesFrame)
 
-% Hold on, we are going to draw a frame + localized spots.
+% Get correct axes and turn hold on, we are going to draw a frame + 
+% localized spots.
+axes(handles.axesFrame)
 hold on
-imshow( imadjust( handles.streamdata{handles.currentframe,1} ), 'Parent', handles.axesFrame );
+
+imshow( imadjust( handles.streamdata{handles.currentframe,1} ) );
+
 
 % Get current frame.
 framecount = size(handles.streamdata, 1);
@@ -32,7 +36,7 @@ try
         X = handles.localizedXY(localizedframe, 2);
         Y = handles.localizedXY(localizedframe, 3);
         
-        plot(handles.axesFrame, X, Y, '.r');
+        plot(X, Y, '.r');
         
     end
     
@@ -51,7 +55,7 @@ try
         handles.localizedXY(:, 2), ...
         handles.localizedXY(:, 3), '.r');
     
-    axis(handles.axesCLGrid, 'square');
+    axis(handles.axesCLGrid, 'square', [0 512 0 512]);
     
 catch
     % Do nothing
@@ -66,7 +70,7 @@ try
         handles.SEMXY(:, 1), ...
         handles.SEMXY(:, 2), '.r');
     
-    axis(handles.axesSEMGrid, 'square');
+    axis(handles.axesSEMGrid, 'square', [0 512 0 512]);
     
 catch
     % Do nothing

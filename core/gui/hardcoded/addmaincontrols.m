@@ -14,14 +14,15 @@ tabPanel = uix.TabPanel('Parent', hfig, ...
 hBoxCL = uix.HBox('Parent', tabPanel);
 hBoxComp = uix.HBox('Parent', tabPanel);
 hBoxSEM = uix.HBox('Parent', tabPanel);
-hBoxResult = uix.HBox('Parent', tabPanel, 'BackgroundColor', 'b');
+hBoxRegistration = uix.HBox('Parent', tabPanel, 'BackgroundColor', 'b');
 
-tabPanel.TabTitles = {'CL', 'Compare', 'SEM', 'Result'};
+tabPanel.TabTitles = {'CL', 'Compare', 'SEM', 'Registration'};
 tabPanel.Selection = 1;
 
 handles = addtabCLcontrols(hBoxCL, handles);
 handles = addtabComparecontrols(hBoxComp, handles);
 handles = addtabSEMcontrols(hBoxSEM, handles);
+handles = addtabRegistrationcontrols(hBoxRegistration, handles);
 
 
 
