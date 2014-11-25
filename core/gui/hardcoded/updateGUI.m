@@ -89,8 +89,8 @@ try
     cla(handles.axesCompareSEM);
     
     plot(handles.axesCompareSEM, ...
-        handles.SEMXY(:, 1), ...
-        handles.SEMXY(:, 2), '.r');
+        handles.XYSEM(:, 1), ...
+        handles.XYSEM(:, 2), '.r');
     
     axis(handles.axesCompareSEM, 'square', [0 512 0 512]);
     title(handles.axesCompareSEM, 'SEM coordinates')

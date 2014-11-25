@@ -17,6 +17,7 @@ axis square
 % Set widths of the main GUI columns
 set(hBox, 'Widths', [ -1 -1 ]);
 
+handles.XYSEM = [ 1 0 0 ];
 
 end
 

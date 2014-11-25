@@ -14,15 +14,17 @@ if path == 0
 else
     handles.pathCL = path;
     handles.fileCL = file;
-
+    
     % Set the shared data.
     handles.streamCL = loadstream(strcat(path, file));
     handles.currentframeCL = 1;
     
-    % Update handles to shared data
-    setmainwindowhandles(handles);
-    
-    % Update GUI. This needs to happen after handles are set.
-    updateGUI()
+end
+
+% Update handles to shared data
+setmainwindowhandles(handles);
+
+% Update GUI. This needs to happen after handles are set.
+updateGUI()
 end
 

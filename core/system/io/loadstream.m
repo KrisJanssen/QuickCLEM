@@ -16,22 +16,6 @@ try
     rawdata = bfopen( fullpath );
     dataset = rawdata{1, 1};
     
-    %slider = handles.axesSlider;
-    
-%     maxVal = size(dataset, 1);
-%     stepVal = 1 / (maxVal - 1);
-%     set(slider,'Min', 1, 'Max', maxVal, 'Sliderstep', [stepVal , stepVal], 'Value', 1);
-    
-%     handles.currentframe = 1;
-%     
-%     [~,name,~] = fileparts(file);
-%     
-%     filenametxt = strcat(name, '.txt');
-%     
-%     handles.SEMXY = csvread( strcat(path, filenametxt) );
-    
-    %guidata( hObject, handles);
-    
     % Get rid of the modal
     showbusy(h);
 catch error

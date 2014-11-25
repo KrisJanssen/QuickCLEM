@@ -7,15 +7,19 @@ function onSEMOpen( hObject, eventdata, handles )
 [file, path] = uigetfile({'*.tif'}, ...
     'Select the SEM image');
 
-handles.filenameSEM = file;
-handles.pathSEM = path;
-
-handles.imageSEM = imread(strcat(path,file));
-handles.infoSEM = imfinfo(strcat(path,file));
-
-setmainwindowhandles( handles );
-
-updateGUI()
-
+if path == 0
+    return
+else
+    
+    handles.filenameSEM = file;
+    handles.pathSEM = path;
+    
+    handles.imageSEM = imread(strcat(path,file));
+    handles.infoSEM = imfinfo(strcat(path,file));
+    
+    setmainwindowhandles( handles );
+    
+    updateGUI()
+    
 end
 
