@@ -1,33 +1,44 @@
-function updateGUI( hObject )
-%UPDATEGUI Summary of this function goes here
-%   Detailed explanation goes here
+function updateGUI()
+%UPDATEGUI takes care of updating the UI based on available data.
+%   The important UI members are:
+%
 
 [ ~, handles ] = getmainwindowhandles();
 
-% Clear the CL sport display
-cla(handles.axesFrame)
+%% CL related controls
 
-% Get correct axes and turn hold on, we are going to draw a frame + 
-% localized spots.
-axes(handles.axesFrame)
+% Clear the CL sport display
+cla(handles.axesCL)
+
+% Get correct axes and turn hold on, draw a frame + localized spots.
+axes(handles.axesCL)
+
+% We are going to add additional stuff, so enable hold.
 hold on
 
-imshow( imadjust( handles.streamdata{handles.currentframe,1} ) );
+% Show the image.
+if handles.currentframeCL > 0
+    imshow( imadjust( handles.streamCL{handles.currentframeCL,1} ) );
+end
 
+% Get the amount of frames.
+framecountCL = size(handles.streamCL, 1);
 
-% Get current frame.
-framecount = size(handles.streamdata, 1);
+% If necessary, set the range on the slider for moving through the stack.
+updateslider(handles.sliderCL, framecountCL);
 
-setuicontrolstring(handles.localizerCtrls, 'Nofframes', framecount)
-setuicontrolstring(handles.localizerCtrls, 'Currframe', handles.currentframe)
+% Update some values on the UI.
+setuicontrolstring(handles.localizerCL, 'Nofframes', framecountCL)
+setuicontrolstring(handles.localizerCL, 'Currframe', handles.currentframeCL)
 
 % Try to paint the localized spot. We use the try because the data for
 % localization is not necessarily available. This is probably not the best
 % way to do but it works for now...
 try
+    
     spotcount = size(handles.localizedXY,1);
     
-    setuicontrolstring(handles.localizerCtrls, 'Noflocalizations', spotcount)
+    setuicontrolstring(handles.localizerCL, 'Noflocalizations', spotcount)
     
     localizedframe = find(handles.localizedXY(:,1) == handles.currentframe);
     
@@ -41,48 +52,118 @@ try
     end
     
 catch
-    % Do nothing. 
+    % Do nothing.
 end
 
 % Done, hold off.
 hold off
 
+% Enable relevant controls
+if handles.currentframeCL > 0
+    enablechildcontrols(handles.localizerCL)
+end
+
+%% Compare related controls
+
+% axesCompareCL
 try
     
-    cla(handles.axesCLGrid);
+    cla(handles.axesCompareCL);
     
-    plot(handles.axesCLGrid, ...
+    plot(handles.axesCompareCL, ...
         handles.localizedXY(:, 2), ...
         handles.localizedXY(:, 3), '.r');
     
-    axis(handles.axesCLGrid, 'square', [0 512 0 512]);
-    title(handles.axesCLGrid, 'Coordinates, localized from WF')
+    axis(handles.axesCompareCL, 'square', [0 512 0 512]);
+    title(handles.axesCompareCL, 'Coordinates, localized from WF')
     
 catch
     % Do nothing
 end
 
+% axesCompareSEM
 try
     
-    %axes(handles.axesCLGrid);
-    cla(handles.axesSEMGrid);
+    cla(handles.axesCompareSEM);
     
-    plot(handles.axesSEMGrid, ...
+    plot(handles.axesCompareSEM, ...
         handles.SEMXY(:, 1), ...
         handles.SEMXY(:, 2), '.r');
     
-    axis(handles.axesSEMGrid, 'square', [0 512 0 512]);
-    title(handles.axesSEMGrid, 'SEM coordinates')
+    axis(handles.axesCompareSEM, 'square', [0 512 0 512]);
+    title(handles.axesCompareSEM, 'SEM coordinates')
     
 catch
     % Do nothing
 end
 
+%% Events related controls
+
+% Clear the CL sport display
+cla(handles.axesEvents)
+
+% Get correct axes and turn hold on, draw a frame + localized spots.
+axes(handles.axesEvents)
+
+% We are going to add additional stuff, so enable hold.
+hold on
+
+% Show the image.
+if handles.currentframeEvents > 0
+    imshow( imadjust( handles.streamEvents{handles.currentframeEvents,1} ) );
+end
+
+% Get the amount of frames.
+framecountEvents = size(handles.streamEvents, 1);
+
+% If necessary, set the range on the slider for moving through the stack.
+updateslider(handles.sliderEvents, framecountEvents);
+
+% Update some values on the UI.
+setuicontrolstring(handles.localizerEvents, 'Nofframes', framecountEvents)
+setuicontrolstring(handles.localizerEvents, 'Currframe', handles.currentframeEvents)
+
+% Try to paint the localized spot. We use the try because the data for
+% localization is not necessarily available. This is probably not the best
+% way to do but it works for now...
 try
-    imshow( imadjust( handles.imageSEM ), 'Parent', handles.axesSEM );
+    
+    spotcount = size(handles.localizedXY,1);
+    
+    setuicontrolstring(handles.localizerCL, 'Noflocalizations', spotcount)
+    
+    localizedframe = find(handles.localizedXY(:,1) == handles.currentframe);
+    
+    if localizedframe
+        
+        X = handles.localizedXY(localizedframe, 2);
+        Y = handles.localizedXY(localizedframe, 3);
+        
+        plot(X, Y, '.r');
+        
+    end
+    
+catch
+    % Do nothing.
+end
+
+% Done, hold off.
+hold off
+
+% Enable relevant controls
+if handles.currentframeEvents > 0
+    enablechildcontrols(handles.localizerEvents)
+end
+
+%% SEM related controls
+
+try
+    imshow(imadjust(handles.imageSEM), 'Parent', handles.axesSEM);
 catch
     % Do nothing
 end
+
+%% Registration related controls
 
 setmainwindowhandles( handles );
 

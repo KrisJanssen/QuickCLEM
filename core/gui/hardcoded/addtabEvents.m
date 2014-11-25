@@ -1,6 +1,10 @@
-function handles = addtabCLcontrols( parent, handles )
-%ADDTABCLCONTROLS Summary of this function goes here
-%   Detailed explanation goes here
+function handles = addtabEvents( parent, handles )
+%ADDTABEVENTS Builds the UI for WF localization
+%   This function adds following members to the shared handles structure:
+%   
+%   handles.axesEvents
+%   handles.sliderEvents
+%   handles.localizerEvents
 
 vBoxLeft = uix.VBox('Parent', parent);
 vBoxRight = uix.VBox('Parent', parent, ...
@@ -12,15 +16,15 @@ set(parent, 'Widths', [ -2 -1 ]);
 
 % Add localizer image display and slider control.
 axesPanel = uix.Panel('Parent', vBoxLeft);
-handles.axesFrame = axes('Parent', axesPanel);
+handles.axesEvents = axes('Parent', axesPanel);
 axis square
 
 frameControlVBox = uix.VBox( 'Parent', vBoxLeft, 'Padding', 10, 'Spacing', 5 , ...
     'BackgroundColor', 'b');
-handles.axesSlider = uicontrol('Parent', frameControlVBox, ...
+handles.sliderEvents = uicontrol('Parent', frameControlVBox, ...
     'BackgroundColor', [.9 .9 .9], ...
     'Style', 'Slider', ...
-    'Callback', @onSlideMove);
+    'Callback', @onSlideEventsMove);
 
 set(vBoxLeft, 'Heights', [ -2 -0.2 ]);
 
@@ -91,7 +95,10 @@ set(localizerGrid, 'Widths', [ -1 -0.5 ], 'Heights', [ 25 25 25 25 25 25 ]);
 
 disablechildcontrols(localizerPanel);
 
-handles.localizerCtrls = localizerPanel;
+handles.localizerEvents = localizerPanel;
+
+handles.currentframeEvents = 0;
+handles.streamEvents = 0;
 
 end
 

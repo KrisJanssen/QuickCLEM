@@ -12,17 +12,19 @@ tabPanel = uix.TabPanel('Parent', hfig, ...
 
 % Add principal layout boxes
 hBoxCL = uix.HBox('Parent', tabPanel);
-hBoxComp = uix.HBox('Parent', tabPanel);
+hBoxCompare = uix.HBox('Parent', tabPanel);
+hBoxEvents = uix.HBox('Parent', tabPanel);
 hBoxSEM = uix.HBox('Parent', tabPanel);
 hBoxRegistration = uix.HBox('Parent', tabPanel, 'BackgroundColor', 'b');
 
-tabPanel.TabTitles = {'CL', 'Compare', 'SEM', 'Registration'};
+tabPanel.TabTitles = {'CL', 'Compare', 'Events', 'SEM', 'Registration'};
 tabPanel.Selection = 1;
 
-handles = addtabCLcontrols(hBoxCL, handles);
-handles = addtabComparecontrols(hBoxComp, handles);
-handles = addtabSEMcontrols(hBoxSEM, handles);
-handles = addtabRegistrationcontrols(hBoxRegistration, handles);
+handles = addtabCL(hBoxCL, handles);
+handles = addtabCompare(hBoxCompare, handles);
+handles = addtabEvents(hBoxEvents, handles);
+handles = addtabSEM(hBoxSEM, handles);
+handles = addtabRegistration(hBoxRegistration, handles);
 
 
 

@@ -11,7 +11,7 @@ existingmenus = findall( hfig, 'Type', 'uimenu' );
 arrayfun(@(x) delete(x), existingmenus);
 
 FileMenu = uimenu( hfig, 'Label', 'File' );
-uimenu( FileMenu, 'Label', 'Open CL', 'Callback', @onFileOpen );
+uimenu( FileMenu, 'Label', 'Open CL', 'Callback', @onCLOpen );
 uimenu( FileMenu, 'Label', 'Open SEM', 'Callback', @onSEMOpen );
 uimenu( FileMenu, 'Label', 'Open Events', 'Callback', @onEventsOpen );
 uimenu( FileMenu, 'Label', 'Exit', 'Callback', @onExit );

@@ -2,28 +2,47 @@ function onEventsOpen( hObject, eventdata, handles )
 %ONEVENTSOPEN Summary of this function goes here
 %   Detailed explanation goes here
 
-% Get main window and corresponding handles.
-mainWindow = getappdata(0, 'mainWindow');
+[ ~, handles ] = getmainwindowhandles();
 
-handles = guidata( mainWindow );
+[file, path] = uigetfile({'*.txt';'*.tif';'*.his'}, ...
+    'Select the XY coordinate file or movie');
 
-[file, path] = uigetfile({'*.txt'}, ...
-    'Select the XY coordinate file');
+[ ~, filename, ext ] = fileparts(file);
 
 if path == 0
     return
 else
     
-    try
+    % User could supply pre localized data in 3 column format:
+    % 1) Frame number
+    % 2) X
+    % 3) Y
+    if ext == '.txt'
         
-        handles.eventsXY = csvread( strcat(path, file) );
+        try
+            
+            handles.XYEvents = csvread( strcat(path, file) );
+            
+        catch
+            
+        end
         
-    catch
+    else
+        
+        % Set the shared data.
+        handles.streamEvents = loadstream(strcat(path, file));
+        handles.currentframeEvents = 1;
+        enablechildcontrols(handles.localizerEvents)
         
     end
 
+end
+
+
 % Save handles
-guidata( hObject, handles);
+setmainwindowhandles(handles);
+
+updateGUI();
 
 end
 
