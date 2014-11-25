@@ -9,6 +9,7 @@ LocalizedEventPoints = [ 414 53; 1 2; 23 564 ];
 
 [ transformedpoints, transform ] = clemcorrelation( handles.SEMXY, handles.localizedXY, LocalizedEventPoints )
 
+performoverlay( LocalizedEventPoints, handles.imageSEM, handles.infoSEM, 1, 1)
 
 setmainwindowhandles(handles);
 

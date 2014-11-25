@@ -56,6 +56,7 @@ try
         handles.localizedXY(:, 3), '.r');
     
     axis(handles.axesCLGrid, 'square', [0 512 0 512]);
+    title(handles.axesCLGrid, 'Coordinates, localized from WF')
     
 catch
     % Do nothing
@@ -71,6 +72,7 @@ try
         handles.SEMXY(:, 2), '.r');
     
     axis(handles.axesSEMGrid, 'square', [0 512 0 512]);
+    title(handles.axesSEMGrid, 'SEM coordinates')
     
 catch
     % Do nothing
