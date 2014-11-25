@@ -67,33 +67,27 @@ end
 
 %% Compare related controls
 
-% axesCompareCL
-try
-    
-    cla(handles.axesCompareCL);
-    
-    plot(handles.axesCompareCL, ...
-        handles.XYCL(:, 2), ...
-        handles.XYCL(:, 3), '.r');
-    
-    axis(handles.axesCompareCL, 'square', [0 512 0 512]);
-    title(handles.axesCompareCL, 'Coordinates, localized from WF')
-    
-catch
-    % Do nothing
-end
-
 % axesCompareSEM
 try
     
-    cla(handles.axesCompareSEM);
+    cla(handles.axesCompare);
     
-    plot(handles.axesCompareSEM, ...
+    axes(handles.axesCompare);
+    
+    plot(handles.axesCompare, ...
         handles.XYSEM(:, 1), ...
-        handles.XYSEM(:, 2), '.r');
+        handles.XYSEM(:, 2), 'xb');
     
-    axis(handles.axesCompareSEM, 'square', [0 512 0 512]);
-    title(handles.axesCompareSEM, 'SEM coordinates')
+    hold on
+    
+    plot(handles.axesCompare, ...
+        handles.XYCL(:, 2), ...
+        handles.XYCL(:, 3), '.r');
+    
+    hold off
+    
+    axis(handles.axesCompare, 'square', [0 512 0 512]);
+    title(handles.axesCompare, 'SEM vs. localized coordinates')
     
 catch
     % Do nothing
