@@ -21,6 +21,8 @@ if handles.currentframeCL > 0
     imshow( imadjust( handles.streamCL{handles.currentframeCL,1} ) );
 end
 
+axis(handles.axesCL, 'square', [0 512 0 512]);
+
 % Get the amount of frames.
 framecountCL = size(handles.streamCL, 1);
 
@@ -36,16 +38,16 @@ setuicontrolstring(handles.localizerCL, 'Currframe', handles.currentframeCL)
 % way to do but it works for now...
 try
     
-    spotcount = size(handles.localizedXY,1);
+    spotcount = size(handles.XYCL,1);
     
     setuicontrolstring(handles.localizerCL, 'Noflocalizations', spotcount)
     
-    localizedframe = find(handles.localizedXY(:,1) == handles.currentframe);
+    localizedframe = find(handles.XYCL(:,1) == handles.currentframeCL);
     
     if localizedframe
         
-        X = handles.localizedXY(localizedframe, 2);
-        Y = handles.localizedXY(localizedframe, 3);
+        X = handles.XYCL(localizedframe, 2);
+        Y = handles.XYCL(localizedframe, 3);
         
         plot(X, Y, '.r');
         
@@ -71,8 +73,8 @@ try
     cla(handles.axesCompareCL);
     
     plot(handles.axesCompareCL, ...
-        handles.localizedXY(:, 2), ...
-        handles.localizedXY(:, 3), '.r');
+        handles.XYCL(:, 2), ...
+        handles.XYCL(:, 3), '.r');
     
     axis(handles.axesCompareCL, 'square', [0 512 0 512]);
     title(handles.axesCompareCL, 'Coordinates, localized from WF')
@@ -113,6 +115,8 @@ if handles.currentframeEvents > 0
     imshow( imadjust( handles.streamEvents{handles.currentframeEvents,1} ) );
 end
 
+axis(handles.axesEvents, 'square', [0 512 0 512]);
+
 % Get the amount of frames.
 framecountEvents = size(handles.streamEvents, 1);
 
@@ -128,16 +132,16 @@ setuicontrolstring(handles.localizerEvents, 'Currframe', handles.currentframeEve
 % way to do but it works for now...
 try
     
-    spotcount = size(handles.localizedXY,1);
+    spotcount = size(handles.XYEvents,1);
     
-    setuicontrolstring(handles.localizerCL, 'Noflocalizations', spotcount)
+    setuicontrolstring(handles.localizerEvents, 'Noflocalizations', spotcount)
     
-    localizedframe = find(handles.localizedXY(:,1) == handles.currentframe);
+    localizedframe = find(handles.XYEvents(:,1) == handles.currentframeEvents);
     
     if localizedframe
         
-        X = handles.localizedXY(localizedframe, 2);
-        Y = handles.localizedXY(localizedframe, 3);
+        X = handles.XYEvents(localizedframe, 2);
+        Y = handles.XYEvents(localizedframe, 3);
         
         plot(X, Y, '.r');
         

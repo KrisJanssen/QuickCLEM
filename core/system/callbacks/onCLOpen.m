@@ -12,7 +12,9 @@ function onCLOpen( hObject, eventdata, handles )
 if path == 0
     return
 else
-    
+    handles.pathCL = path;
+    handles.fileCL = file;
+
     % Set the shared data.
     handles.streamCL = loadstream(strcat(path, file));
     handles.currentframeCL = 1;

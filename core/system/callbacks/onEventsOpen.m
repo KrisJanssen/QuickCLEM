@@ -13,6 +13,9 @@ if path == 0
     return
 else
     
+    handles.pathEvents = path;
+    handles.fileEvents = file;
+    
     % User could supply pre localized data in 3 column format:
     % 1) Frame number
     % 2) X
@@ -37,7 +40,6 @@ else
     end
 
 end
-
 
 % Save handles
 setmainwindowhandles(handles);
