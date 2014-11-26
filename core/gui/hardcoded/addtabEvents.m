@@ -102,5 +102,7 @@ handles.fileEvents = '';
 handles.currentframeEvents = 0;
 handles.streamEvents = 0;
 
+handles.XYEvents = [ 1 0 0 ];
+
 end
 

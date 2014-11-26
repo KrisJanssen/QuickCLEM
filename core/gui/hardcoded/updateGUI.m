@@ -74,12 +74,14 @@ try
     
     axes(handles.axesCompare);
     
+    % Where the CL spots should be.
     plot(handles.axesCompare, ...
         handles.XYSEM(:, 1), ...
         handles.XYSEM(:, 2), 'xb');
     
     hold on
     
+    % Where they actually are.
     plot(handles.axesCompare, ...
         handles.XYCL(:, 2), ...
         handles.XYCL(:, 3), '.r');

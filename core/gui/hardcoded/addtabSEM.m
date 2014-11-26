@@ -12,5 +12,8 @@ handles.axesSEM = axes('Parent', vBoxLeft);
 % Set widths of the main GUI columns
 set(parent, 'Widths', [ -2 -1 ]);
 
+handles.imageSEM = [ 0 0; 0 0 ];
+handles.infoSEM = '';
+
 end
 

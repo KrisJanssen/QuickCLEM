@@ -4,12 +4,16 @@ function onRegister( source , callbackdata )
 
 [ ~, handles ] = getmainwindowhandles();
 
-% Plug in the coordinates of the events here...
-LocalizedEventPoints = [ 414 53; 1 2; 23 564 ];
+% For debug only: Plug in some coordinates of the events here...
+%handles.XYEvents = [ 414 53; 23 220 ];
+%handles.XYEvents = handles.XYSEM;
 
-[ transformedpoints, transform ] = clemcorrelation( handles.SEMXY, handles.localizedXY, LocalizedEventPoints )
+[ transformedpoints, transform ] = clemcorrelation( ...
+    handles.XYSEM, ...
+    handles.XYCL, ...
+    handles.XYEvents )
 
-performoverlay( LocalizedEventPoints, handles.imageSEM, handles.infoSEM, 1, 1)
+performoverlay( transformedpoints, handles.imageSEM, handles.infoSEM, 1, 500e-009)
 
 setmainwindowhandles(handles);
 

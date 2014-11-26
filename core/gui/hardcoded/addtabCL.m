@@ -103,5 +103,7 @@ handles.fileCL = '';
 handles.currentframeCL = 0;
 handles.streamCL = 0;
 
+handles.XYCL = [ 1 0 0 ];
+
 end
 
