@@ -1,4 +1,4 @@
-function onSEMOpen( hObject, eventdata, handles )
+function onSEMOOpen( hObject, eventdata, handles )
 %ONSEMOPEN Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -11,11 +11,11 @@ if path == 0
     return
 else
     
-    handles.filenameSEM = file;
-    handles.pathSEM = path;
+    handles.filenameSEMO = file;
+    handles.pathSEMO = path;
     
-    handles.imageSEM = imread(strcat(path,file));
-    handles.infoSEM = imfinfo(strcat(path,file));
+    handles.imageSEMO = imread(strcat(path,file));
+    handles.infoSEMO = imfinfo(strcat(path,file));
     
     setmainwindowhandles( handles );
     

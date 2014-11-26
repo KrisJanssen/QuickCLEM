@@ -24,7 +24,9 @@ else
         
         try
             
-            handles.XYEvents = csvread( strcat(path, file) );
+            raw = csvread( strcat(path, file) );
+            cols = [ 1 4 5 ];
+            handles.XYEvents = raw(:,cols);
             
         catch
             

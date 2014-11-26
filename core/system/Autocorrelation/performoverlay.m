@@ -1,4 +1,4 @@
-function performoverlay( transformedPoints, imageSEM, infoSEM, OHFW, BinWidth)
+function performoverlay( transformedPoints, imageSEMO, infoSEMO, imageSEMZ, infoSEMZ, BinWidth)
 %PERFORMOVERLAY Creates an events on SEM overlay image.
 %   Parameters:
 %   
@@ -20,8 +20,8 @@ overlayedSEM = subplot(1,2,1);
 
 % Get the dimensions of the SEM image in pixels, here, the annotation bar
 % is included!
-XWidth = infoSEM.Width;
-YWidth = infoSEM.Height;
+XWidth = infoSEMO.Width;
+YWidth = infoSEMO.Height;
 
 % The image tif contains metadata that is non-standard. From it, we get the
 % width of a pixel in meters. We start looking for it at the 'PixelWidth='
@@ -34,87 +34,131 @@ YWidth = infoSEM.Height;
 % Any number of digits: \d+
 regex = 'PixelWidth\=(\-|\+)?\d+\.\d+e(\-|\+)?\d+';
 
-pixelWidth = strrep( ...
-    regexp(infoSEM.UnknownTags.Value,regex,'match'), ...
+pixelWidthO = strrep( ...
+    regexp(infoSEMO.UnknownTags.Value,regex,'match'), ...
+    'PixelWidth=', ...
+    '');
+
+pixelWidthZ = strrep( ...
+    regexp(infoSEMZ.UnknownTags.Value,regex,'match'), ...
     'PixelWidth=', ...
     '');
 
 % Convert to a numeric value.
-PixelResolution = str2double(pixelWidth(1));
+PixelResolutionO = str2double(pixelWidthO(1));
+PixelResolutionZ = str2double(pixelWidthZ(1));
 
 % SEM scans images as 768 * 512 raster. The tiff is thus oversampled.
 OverSample = XWidth / 768;
 
 % Physical width of the image in m.
-HFW = XWidth * PixelResolution;
+HFWO = XWidth * PixelResolutionO;
+HFWZ = XWidth * PixelResolutionZ;
 
-MagScale =  1;%(OHFW)/HFW;
+% The CL spots are layed out around the ROI so we have an overview image 
+% and the actual detail image. We need the scale factor between both
+% images.
+ZoomFactor = HFWO / HFWZ;
 
 % Since the SEM scans a 768 * 512 raster and we know the oversampling
 % factor from the X dimension, we can work out the width of the annotation
 % band on the SEM output and get rid of it.
 YWidthReal = OverSample * 512;
 
-% imageSEMCropped = subimage( ...
-%     [(XWidth-(XWidth/MagScale))/2 ((XWidth/MagScale)+XWidth)/2], ...
-%     [((YWidth-(YWidth/MagScale))/2) - AnnotationHeight (((YWidth/MagScale)+YWidth)/2)-AnnotationHeight] , ...
-%     imageSEM);
-
-% imageSEMCropped = subimage( ...
-%     [ 0 XWidth ], ...
-%     [ 0 YWidthReal ] , ...
-%     imageSEM);
-
 % Crop only the actual image.
-imageSEMCropped = imageSEM( ...
+imageSEMOCropped = imageSEMO( ...
+    1:YWidthReal , ...
+    1:XWidth );
+
+imageSEMZCropped = imageSEMZ( ...
     1:YWidthReal , ...
     1:XWidth );
 
 % Paint this image.
-imshow( imadjust( imageSEMCropped ) );
+imshow( imadjust( imageSEMOCropped ) );
 
 axis image;
 
 % Transform raster (768 * 512) coordinates to image pixel coordinates.
+% We also need to shift by 128 in X since the EM-CCD is 512 * 512 so there
+% wille be 128 borders on each side.
+% Of course, we also correct for the oversampling of the actual TIFF.
 pointsScaled(:,1) = ((transformedPoints(:,1) + 128) * OverSample);
 pointsScaled(:,2) = ((transformedPoints(:,2)) * OverSample);
+
+% Initialize a matrix holding the event points in 'zoomed in' coordinates.
+pointsScaledZoom = pointsScaled;
+
+% The actual zoom calculation on event points. 
+% We assume the overview and detail image are perfectly 
+% centered.
+% To zoom in, we translate the coordinates such that the origin is in the
+% center of the frame. Then we only need to multiply by the ZoomFactor and
+% translate back.
+pointsScaledZoom(:,1) = ( ( pointsScaled(:,1) - ( XWidth / 2 ) ) * ZoomFactor ) + ( XWidth / 2 );
+pointsScaledZoom(:,2) = ( ( pointsScaled(:,2) - ( YWidthReal / 2 ) ) * ZoomFactor ) + ( YWidthReal / 2 );
 
 % Add the localized events on top of the image.
 hold all
 
+% Plot the events on the overview image.
 scatter(pointsScaled(:,1),pointsScaled(:,2), [ ], 'r');
 
 hold off
 
+% Create the detail image.
 heatmap = subplot(1,2,2);
 
+% Show the zoomed inEM image here as well.
+imshow( imadjust( imageSEMZCropped ) );
+
+% Add the localized events on top of the image.
+hold all
+
+% Plot the event points on the zoomed in EM image.
+scatter(pointsScaledZoom(:,1),pointsScaledZoom(:,2), [ ], 'g');
+
+hold off
+
+hold all
+
 % For binning, we can use hist3
-% First, convert binsize to a discrete number of bins.
-nbinsX = round( PixelResolution * XWidth / BinWidth );
-nbinsY = round( PixelResolution * YWidthReal / BinWidth );
+% First, convert binsize to a discrete number of bins. We do so by checking
+% how many times the desired bin width fits into the physical size of the
+% image. We do this in the Y direction. The X direction is actually the
+% same.
+nbins = round( PixelResolutionZ * YWidthReal / BinWidth );
 
-binnedpointsScaled = hist3(pointsScaled, [ nbinsX nbinsY ]);
+% Based on the size of a bin, we calculate the location of bin edges.
+edges = linspace(1, nbins, nbins) * (BinWidth / PixelResolutionZ);
 
-inter = imresize(binnedpointsScaled, [YWidthReal XWidth], 'bilinear');
+% Store these edges in a format hist3 likes.
+edgesxy = cell(1,2);
+edgesxy{1} = edges;
+edgesxy{2} = edges;
 
-c = overlayImg(imageSEMCropped, inter); 
+% Generate the actual 2D histogram. N is the 'bitmap' holding the counts
+% for each bin. We will take this bitmap and blow it up to be the same size
+% (in px) as the SEM image so that we can overlay easily.
+[ N, C ] = hist3(pointsScaledZoom, 'Edges', edgesxy);
 
-%imagesc(binnedpointsScaled);
+% It is easiest to blow up the low res histogram, which is basically a 
+% bitmap to be the same size as the EM image.
+blowupfactor = YWidthReal / size(N, 1);
 
-pause(1);
-% nbins(1) = round((PixelResolution*XWidth*(512/768))/(BinWidth));
-% nbins(2) = nbins(1);
-% [N,C] = hist3(points, 'Nbins',nbins);
-% imagesc([((C{1}(1))+128)*SEMOverSample (C{1}(nbins(1))+128)*SEMOverSample],[C{2}(nbins(2))*SEMOverSample C{2}(1)*SEMOverSample],imrotate(log10(N),90));
-% colormap(h2,hot);
-% colorbar;
-% pos2 = get(h2,'Position');
-% pos1 = get(h1,'Position');
-% pos1(3) = pos2(3);
-% set(h1,'Position',pos1);
-% linkaxes([ overlayedSEM, heatmap ],'xy');
-% axis image;
-% vertical_cursors
+% The actual blowing up.
+squareHeatmap = imresize(transpose(N),blowupfactor,'nearest');
+
+% We now create an array the size of the EM image.
+fullHeatmap = zeros(YWidthReal, XWidth);
+
+% We place the blown up histogram in the middle of this map.
+fullHeatmap(:,( 128 * OverSample ) + 1:( 128 * OverSample ) + YWidthReal) = squareHeatmap;
+
+% Show the overlayed figure.
+c = overlayImg(imageSEMZCropped, fullHeatmap); 
+
+hold off 
 
 end
 

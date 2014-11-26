@@ -158,7 +158,8 @@ end
 %% SEM related controls
 
 try
-    imshow(imadjust(handles.imageSEM), 'Parent', handles.axesSEM);
+    imshow(imadjust(handles.imageSEMO), 'Parent', handles.axesSEMO);
+    imshow(imadjust(handles.imageSEMZ), 'Parent', handles.axesSEMZ);
 catch
     % Do nothing
 end
