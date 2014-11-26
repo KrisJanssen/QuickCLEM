@@ -1,4 +1,4 @@
-function performoverlay( transformedPoints, imageSEMO, infoSEMO, imageSEMZ, infoSEMZ, BinWidth)
+function performoverlay( transformedPoints, imageSEMO, infoSEMO, imageSEMZ, infoSEMZ, ShiftX, ShiftY, BinWidth)
 %PERFORMOVERLAY Creates an events on SEM overlay image.
 %   Parameters:
 %   
