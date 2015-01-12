@@ -2,10 +2,15 @@ function performoverlay( transformedPoints, imageSEMO, infoSEMO, imageSEMZ, info
 %PERFORMOVERLAY Creates an events on SEM overlay image.
 %   Parameters:
 %   
-%   transformedPoints:  The XY coordinates of events to overlay
-%   imageSEM:           The SEM image
-%   infoSEM:            Into on the SEM image
-%   OFWHM:              ?
+%   transformedPoints:  The XY coordinates of events to overlay expressed
+%                       as pixel coordinates in the 768 by 512 raster that 
+%                       constitutes the SEM image.
+%   imageSEMO:          The SEM overview image
+%   infoSEMO:           Info on the SEM overview image
+%   imageSEMZ:          The SEM zoom image
+%   infoSEMO:           Into on the SEM zoom image
+%   ShiftX:             A corrective shift for the overlay in X (in nm)
+%   ShiftY              A corrective shift for the overlay in Y (in nm)
 %   BinWidth:           Preferred width of overlay binning in nm
 
 % Generate a figure.
@@ -94,12 +99,17 @@ pointsScaledZoom = pointsScaled;
 
 % The actual zoom calculation on event points. 
 % We assume the overview and detail image are perfectly 
-% centered.
+% centered (which is likely not entirely true).
 % To zoom in, we translate the coordinates such that the origin is in the
 % center of the frame. Then we only need to multiply by the ZoomFactor and
 % translate back.
-pointsScaledZoom(:,1) = ( ( pointsScaled(:,1) - ( XWidth / 2 ) ) * ZoomFactor ) + ( XWidth / 2 );
-pointsScaledZoom(:,2) = ( ( pointsScaled(:,2) - ( YWidthReal / 2 ) ) * ZoomFactor ) + ( YWidthReal / 2 );
+% We also apply the X and Y shift here.
+pointsScaledZoom(:,1) = ...
+    ( ShiftX / PixelResolutionZ ) + ...
+    ( ( pointsScaled(:,1) - ( XWidth / 2 ) ) * ZoomFactor ) + ( XWidth / 2 );
+pointsScaledZoom(:,2) = ...
+    ( ShiftY / PixelResolutionZ ) + ...
+    ( ( pointsScaled(:,2) - ( YWidthReal / 2 ) ) * ZoomFactor ) + ( YWidthReal / 2 );
 
 % Add the localized events on top of the image.
 hold all
