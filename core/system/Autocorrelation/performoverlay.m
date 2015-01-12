@@ -34,13 +34,16 @@ YWidth = infoSEMO.Height;
 % Any number of digits: \d+
 regex = 'PixelWidth\=(\-|\+)?\d+\.\d+e(\-|\+)?\d+';
 
+rawPixelWidtO = infoSEMO.UnknownTags.Value;
+rawPixelWidtZ = infoSEMZ.UnknownTags.Value;
+
 pixelWidthO = strrep( ...
-    regexp(infoSEMO.UnknownTags.Value,regex,'match'), ...
+    regexp(rawPixelWidtO,regex,'match'), ...
     'PixelWidth=', ...
     '');
 
 pixelWidthZ = strrep( ...
-    regexp(infoSEMZ.UnknownTags.Value,regex,'match'), ...
+    regexp(rawPixelWidtZ,regex,'match'), ...
     'PixelWidth=', ...
     '');
 
@@ -157,6 +160,9 @@ fullHeatmap(:,( 128 * OverSample ) + 1:( 128 * OverSample ) + YWidthReal) = squa
 
 % Show the overlayed figure.
 c = overlayImg(imageSEMZCropped, fullHeatmap); 
+
+% We want the regions with no events to be 100% transparent in the overlay.
+c.setTranspRange([0 0])
 
 hold off 
 
