@@ -6,7 +6,7 @@ function onCLOpen( hObject, eventdata, handles )
 [ ~, handles ] = getmainwindowhandles();
 
 % File open UI.
-[file, path] = uigetfile({'*.HIS';'*.tif'}, ...
+[file, path] = uigetfile({'*.tif';'*.HIS'}, ...
     'Select the CCD stream file');
 
 if path == 0
