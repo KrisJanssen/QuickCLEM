@@ -10,18 +10,18 @@ try
     
     
     % Show a modal while we are busy
-    h = showbusy;
+    %h = showbusy;
     pause(0.1);
     
     rawdata = bfopen( fullpath );
     dataset = rawdata{1, 1};
     
     % Get rid of the modal
-    showbusy(h);
+    %showbusy(h);
 catch error
-    showbusy(h);
+    %showbusy(h);
     
-    rethrow(error);
+    %rethrow(error);
 end
 
 end

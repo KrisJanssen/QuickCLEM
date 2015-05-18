@@ -1,4 +1,4 @@
-function [ res ] = Ujii_Autotrack4(cod, maxdist, mod)
+function [ res ] = Autotrack4(cod, maxdist, mod)
 %Ujii_Autotrack4 Summary of this function goes here
 %   Detailed explanation goes here
 %

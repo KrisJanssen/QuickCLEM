@@ -35,7 +35,16 @@ else
     else
         
         % Set the shared data.
+        numfiles = 3;
+        
         handles.streamEvents = loadstream(strcat(path, file));
+
+        for k = 2:numfiles
+            currentfile = strcat(path,filename(1:end-1),num2str(k),ext);
+            handles.streamEvents = [ handles.streamEvents; loadstream(currentfile) ];
+        end
+        
+        %handles.streamEvents = loadstream(strcat(path, file));
         handles.currentframeEvents = 1;
         enablechildcontrols(handles.localizerEvents)
         
