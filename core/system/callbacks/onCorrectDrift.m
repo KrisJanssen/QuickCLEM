@@ -19,10 +19,10 @@ if isfield(handles,'XYEvents')
     % outside our ROI. If we draw an A=ROI around the area of interest, we
     % can assume that any fiducial markers will be outside of it. We retain
     % those for drift correction.
-    in = inpolygon(handles.XYEvents(:,1),handles.XYEvents(:,2),xpoly,ypoly);
+    in = inpolygon(handles.XYEvents(:,2),handles.XYEvents(:,3),xpoly,ypoly);
     
     % We can now filter the fiducial markers from the localization set.
-    XYFiducials = handles.XYEvents(~in,:);
+    XYFiducials = handles.XYEvents(in,:);
     
     % We now try to compose tracks from the localized points. These are
     % returned in following format:
@@ -38,7 +38,8 @@ if isfield(handles,'XYEvents')
     
     dxx=[];dyy=[];
     
-    tracklength = 100;
+    % We are onlu interested in onger tracks.
+    tracklength = 10;
     
     % We need to run through all tracks so we check how many there are in
     % the list of tracks. Track no.'s are in the fourth column.
@@ -65,6 +66,8 @@ if isfield(handles,'XYEvents')
         
     end
     
+    delete(h);
+    
     % In the array holding the marker shifts, the same frame number will
     % occur multiple times since in each frame there are likely multiple
     % markers that shift position. Morover, these frame numbers will not
@@ -76,8 +79,20 @@ if isfield(handles,'XYEvents')
     
     % We use the ordered indexes to run through the shifts, averaging all
     % shifts within each individual frame.
-    xx_ave = cumsum(arrayfun(@(x) mean(dxx(dxx(:,2) == x, 1)), fr));
-    yy_ave = cumsum(arrayfun(@(x) mean(dyy(dyy(:,2) == x, 1)), fr));
+    xx_tmp = arrayfun(@(x) mean(dxx(dxx(:,2) == x, 1)), fr);
+    yy_tmp = arrayfun(@(x) mean(dyy(dyy(:,2) == x, 1)), fr);
+    
+    % If the microscope mechanics are not stable, focus might drift
+    % significantly. In this case, some frames might not feature visible or
+    % localizable markers. xx_tmp might thus contain NaN for the values of
+    % mean. These need to be set to 0 (assume no drift here as a crude fix).
+    xx_tmp(isnan(xx_tmp)) = 0;
+    yy_tmp(isnan(yy_tmp)) = 0;
+    
+    % We calculate the cumulative displacement of the sample from the fram
+    % to frame displacements.
+    xx_ave = cumsum(xx_tmp);
+    yy_ave = cumsum(yy_tmp);
     
     % Now that we have the averaged shifts per frame in X and Y we can fit
     % the shifts with a smoothing spline. The localization accuracy is
@@ -89,6 +104,8 @@ if isfield(handles,'XYEvents')
     % Plot the average drift data together with the spline fit.
     figure, plot(xx_ave, '.k'); title('Drift in x-direction'); hold on; plot(fxx); hold off
     figure, plot(yy_ave, '.k'); title('Drift in y-direction'); hold on; plot(fyy); hold off
+    clr = jet(size(xx_ave,2));
+    figure, scatter(xx_ave, yy_ave, [], clr, 'filled'); title('Drift in xy');
     
     % Finally, correct all positions.
     handles.XYEvents(:,2) = handles.XYEvents(:,2) - fxx(handles.XYEvents(:,1));

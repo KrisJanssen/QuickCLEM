@@ -35,7 +35,7 @@ else
     else
         
         % Set the shared data.
-        numfiles = 3;
+        numfiles = 5;
         
         handles.streamEvents = loadstream(strcat(path, file));
 
