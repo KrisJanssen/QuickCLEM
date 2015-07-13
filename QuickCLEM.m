@@ -43,8 +43,13 @@ addpath(genpath(fullfile(pwd,'refs')))
 %% Splash screen.
 % Display splash screen if 
 % 1) running MATLAB version 2010a or above 
-% 2) if its not a deployed GUI version, and 
-% 3) splash hasn't been loaded already
+% 2) it is not a deployed GUI version 
+% 3) splash has not been loaded already
+%
+% Splash screen code was originally written by Søren Preus, developer of
+% DecayFit software (www.fluortools.com). Some of the UI initialization
+% concepts were also derived from DecayFit.
+
 
 try
     % Open splash screen
@@ -62,7 +67,7 @@ try
     end
     
     % Set progressbar of splash screen
-    progTot = 3; % Total number of times the main function is being called upon startup. Application dependent.
+    progTot = 1; % Total number of times the main function is being called upon startup. Application dependent.
     
     % Running parameter counting how many times the main function has been called
     prog = getappdata(0,'QuickCLEMSplashCounter');
