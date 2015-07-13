@@ -160,6 +160,7 @@ end
 try
     imshow(imadjust(handles.imageSEMO), 'Parent', handles.axesSEMO);
     imshow(imadjust(handles.imageSEMZ), 'Parent', handles.axesSEMZ);
+    imshow(imadjust(handles.im), 'Parent', handles.axesImage);
 catch
     % Do nothing
 end

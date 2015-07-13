@@ -16,6 +16,7 @@ uimenu( FileMenu, 'Label', 'Open SEM Coordinates', 'Callback', @onSEMCOpen );
 uimenu( FileMenu, 'Label', 'Open SEM Overview Image', 'Callback', @onSEMOOpen );
 uimenu( FileMenu, 'Label', 'Open SEM Zoom Image', 'Callback', @onSEMZOpen );
 uimenu( FileMenu, 'Label', 'Open Events', 'Callback', @onEventsOpen );
+uimenu( FileMenu, 'Label', 'Open Single WF image', 'Callback', @ onImageOpen );
 uimenu( FileMenu, 'Label', 'Exit', 'Callback', @onExit );
 
 % Store the handles to the new menu

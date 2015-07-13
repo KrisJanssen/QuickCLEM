@@ -12,6 +12,9 @@ function [ transformedpoints, transform ] = clemcorrelation( FixedPoints, Locali
 % LocalizedEventPoints is a 2 column matrix holding X and Y coordinates for
 % whatever events, localized in the WF images, we might want to correlate.
 
+% Get handles to shared data.
+[ ~, handles ] = getmainwindowhandles();
+
 % Localizer will store the frames numbers for CL spots that were actually
 % localized in the first column of LocalizedCLPoints. We therefore only
 % retain those indexes in FixedPoints.
@@ -23,10 +26,19 @@ FixedPointsScreened = FixedPoints(LocalizedCLPoints(:,1),:);
 [transform, ~, ~] = estimateGeometricTransform( ...
     LocalizedCLPoints(:,[2 3]), FixedPointsScreened, 'projective');
 
-% We correct the LocalizedEventPoints array according to the transformation
-% matrix.
-transformedpoints = tformfwd( ...
-    maketform('projective', transform.T), LocalizedEventPoints);
+if handles.imagemode
+    handles.imt = imwarp(handles.im, transform);
+    transformedpoints = 0;
+else
+    % We correct the LocalizedEventPoints array according to the transformation
+    % matrix.
+    transformedpoints = tformfwd( ...
+        maketform('projective', transform.T), LocalizedEventPoints);
+end
+
+setmainwindowhandles(handles);
+    
+updateGUI();
 
 end
 
