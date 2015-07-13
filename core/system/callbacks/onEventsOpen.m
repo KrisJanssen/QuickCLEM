@@ -4,14 +4,17 @@ function onEventsOpen( hObject, eventdata, handles )
 
 [ ~, handles ] = getmainwindowhandles();
 
-[file, path] = uigetfile({'*.txt';'*.tif';'*.his'}, ...
-    'Select the XY coordinate file or movie');
+prompt = 'Is the event data stored in multiple movies? If so, how many? ';
+numfiles = inputdlg(prompt);
 
-[ ~, filename, ext ] = fileparts(file);
+[file, path] = uigetfile({'*.tif';'*.his';'*.txt'}, ...
+    'Select the XY coordinate file or movie');
 
 if path == 0
     return
 else
+    
+    [ ~, filename, ext ] = fileparts(file);
     
     handles.pathEvents = path;
     handles.fileEvents = file;
@@ -20,7 +23,7 @@ else
     % 1) Frame number
     % 2) X
     % 3) Y
-    if ext == '.txt'
+    if strcmp(ext, '.txt')
         
         try
             
@@ -34,17 +37,16 @@ else
         
     else
         
-        % Set the shared data.
-        numfiles = 5;
-        
         handles.streamEvents = loadstream(strcat(path, file));
-
-        for k = 2:numfiles
-            currentfile = strcat(path,filename(1:end-1),num2str(k),ext);
-            handles.streamEvents = [ handles.streamEvents; loadstream(currentfile) ];
+        
+        % Load any additional parts of the data set we might have.
+        if numfiles > 1
+            for k = 2:numfiles
+                currentfile = strcat(path,filename(1:end-1),num2str(k),ext);
+                handles.streamEvents = [ handles.streamEvents; loadstream(currentfile) ];
+            end
         end
         
-        %handles.streamEvents = loadstream(strcat(path, file));
         handles.currentframeEvents = 1;
         enablechildcontrols(handles.localizerEvents)
         
