@@ -102,13 +102,44 @@ hold all
 % The SEM generated tif files are 512 * 768 aspect ratio where each raster 
 % point is oversampled. We thus need to convert our 2D image to be the
 % same size.
-upscaledHeatmap = imresize(...
-    handles.imt, ...
-    [SEMImageHeightCropped, SEMImageWidth], ...
-    'nearest');
+padimt = padarray(handles.imt,[0 128],'both');
 
-% Show the overlayed figure.
-c = overlayImg(imageSEMOCropped, upscaledHeatmap); 
+% In order to overlay the low resolution WF image on the high pixel SEM
+% image, we need to 'blow it up', for that we use imresize WITHOUT
+% interpolation. We use 'box':
+% [ 1 2; 3 4] becomes [ 1 1 2 2; 1 1 2 2; 3 3 4 4; 3 3 4 4 ]
+% The output of this first rescaling allows us to overlay on the overview
+% image.
+upscaledHeatmap = imresize(...
+    padimt, ...
+    [SEMImageHeightCropped, SEMImageWidth], ...
+    'box');
+
+% Next we also would like to overlay on the zoomed image. This shows a
+% smaller area, ZoomFactor times smaller than the overview image. To save
+% on computation time, instead of blowing up upscaledHeatmap by ZoomFactor,
+% we first crop out the region of interest and blow that up instead.
+SEMImageHeightCroppedZoomed = round(SEMImageHeightCropped / ZoomFactor);
+SEMImageWidthZoomed = round(SEMImageWidth / ZoomFactor);
+
+HeightOffset = round((SEMImageHeightCropped - SEMImageHeightCroppedZoomed) / 2);
+WidthOffset = round((SEMImageWidth - SEMImageWidthZoomed) / 2);
+
+upscaledHeatmapZoomed = imresize(...
+    upscaledHeatmap(HeightOffset:HeightOffset + SEMImageHeightCroppedZoomed, WidthOffset:WidthOffset + SEMImageWidthZoomed), ...
+    [SEMImageHeightCropped, SEMImageWidth], ...
+    'box');
+
+% Show the overlayed figure OVERVIEW.
+b = overlayImg(imageSEMOCropped, upscaledHeatmap);
+
+
+% We want the regions with no events to be 100% transparent in the overlay.
+b.setTranspRange([0 1])
+
+% Show the overlayed figure ZOOM.
+c = overlayImg(imageSEMZCropped, upscaledHeatmapZoomed);
+
 
 % We want the regions with no events to be 100% transparent in the overlay.
 c.setTranspRange([0 1])

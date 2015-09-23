@@ -27,11 +27,18 @@ FixedPointsScreened = FixedPoints(LocalizedCLPoints(:,1),:);
     LocalizedCLPoints(:,[2 3]), FixedPointsScreened, 'projective');
 
 if handles.imagemode
-    handles.imt = imwarp(handles.im, transform);
+    % We need to apply the transformation matrix to the image. The imref2d
+    % output as the last argument ensures that the output image is nicely
+    % referenced to the confines of the original image.
+    handles.imt = imwarp(...
+        handles.im, transform, ...
+        'OutputView',...
+        imref2d(size(handles.im)));
+    
     transformedpoints = 0;
 else
-    % We correct the LocalizedEventPoints array according to the transformation
-    % matrix.
+    % We correct the LocalizedEventPoints array according to the 
+    % transformation matrix.
     transformedpoints = tformfwd( ...
         maketform('projective', transform.T), LocalizedEventPoints);
 end
