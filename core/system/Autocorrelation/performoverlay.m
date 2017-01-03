@@ -181,6 +181,15 @@ c = overlayImg(imageSEMZCropped, upscaledHeatmap);
 % We want the regions with no events to be 100% transparent in the overlay.
 c.setTranspRange([0 0])
 
+%Jordi
+%Make it possible to obtain the coordinates of a certain point before and 
+%after drift by clicking with the mouse on the image
+[coordx,coordy] = ginput(2);
+coordxdelta = coordx(2)-coordx(1);
+coordydelta = coordy(2)-coordy(1);
+disp(coordxdelta);
+disp(coordydelta);
+
 hold off 
 
 end
